@@ -13,7 +13,32 @@
 from enlace import *
 import time
 import numpy as np
+import random
 
+command1 = b'\x00\x00\x00\x00'
+command2 = b'\x00\x00\xBB\x00'
+command3 = b'\xBB\x00\x00'
+command4 = b'\x00\xBB\x00'
+command5 = b'\x00\x00\xBB'
+command6 = b'\x00\xAA'
+command7 = b'\xBB\x00'
+command8 = b'\x00'
+command9 = b'\xBB'
+
+commands = [command1,command2,command3,command4,command5,command6,command7,command8,command9]
+print(commands)
+
+quantidade = random.randint(10,30)
+print(quantidade)
+
+random_commands = []
+i = 1
+while i <= quantidade:
+    sorteado = random.randint(0,8)
+    random_commands.append(commands[sorteado])
+    i+=1
+
+print(random_commands)
 # voce deverá descomentar e configurar a porta com através da qual ira fazer comunicaçao
 #   para saber a sua porta, execute no terminal :
 #   python -m serial.tools.list_ports

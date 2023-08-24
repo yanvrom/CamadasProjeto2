@@ -26,19 +26,28 @@ command8 = b'\x00'
 command9 = b'\xBB'
 
 commands = [command1,command2,command3,command4,command5,command6,command7,command8,command9]
-print(commands)
 
 quantidade = random.randint(10,30)
-print(quantidade)
 
-random_commands = []
-i = 1
-while i <= quantidade:
-    sorteado = random.randint(0,8)
-    random_commands.append(commands[sorteado])
-    i+=1
+def sorteia_comandos():
+    random_commands = []
+    i = 1
+    while i <= quantidade:
+        sorteado = random.randint(0,8)
+        random_commands.append(commands[sorteado])
+        i+=1
+    return random_commands
 
-print(random_commands)
+def constroi_mensagem(lista_comandos):
+    total = len(lista_comandos)
+    mensagem = bytearray([total])
+    for command in lista_comandos:
+        mensagem += command
+        mensagem += b'\xFB'
+    return mensagem    
+    
+    
+
 # voce deverá descomentar e configurar a porta com através da qual ira fazer comunicaçao
 #   para saber a sua porta, execute no terminal :
 #   python -m serial.tools.list_ports
@@ -53,6 +62,10 @@ serialName = "COM7"                  # Windows(variacao de)
 def main():
     try:
         print("Iniciou o main")
+        
+        comandos = sorteia_comandos()
+        mensagem = constroi_mensagem(comandos)
+        print(mensagem)
         #declaramos um objeto do tipo enlace com o nome "com". Essa é a camada inferior à aplicação. Observe que um parametro
         #para declarar esse objeto é o nome da porta.
         com1 = enlace(serialName)
@@ -62,18 +75,12 @@ def main():
         com1.enable()
         #Se chegamos até aqui, a comunicação foi aberta com sucesso. Faça um print para informar.
         print("Abriu a comunicação")
-        
-           
-                  
+
+
         #aqui você deverá gerar os dados a serem transmitidos. 
         #seus dados a serem transmitidos são um array bytes a serem transmitidos. Gere esta lista com o 
         #nome de txBuffer. Esla sempre irá armazenar os dados a serem enviados.
-        imageR = "./imgs/imgEnviada.jpg"
-        imageW = "./imgs/recebidaCopia.jpg"
         
-        print("Carregando imagem para transmissão: ")
-        print(" - {}".format(imageR))
-        print("----------------------------")
         txBuffer = open(imageR, 'rb').read()
         #txBuffer = b'\x12\x13\xAA'  #isso é um array de bytes
        

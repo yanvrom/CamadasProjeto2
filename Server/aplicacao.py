@@ -22,8 +22,18 @@ import numpy as np
 #use uma das 3 opcoes para atribuir à variável a porta usada
 #serialName = "/dev/ttyACM0"           # Ubuntu (variacao de)
 #serialName = "/dev/tty.usbmodem1411" # Mac    (variacao de)
-serialName = "COM7"                  # Windows(variacao de)
+serialName = "COM5"                  # Windows(variacao de)
 
+def split_message(message):
+    message = bytearray(message)
+    message.pop(0)
+    m = message.split(b'\xfb')
+    while b'' in m:
+        m.remove(b'')
+    return m
+
+def get_first(message):
+    return message[0]
 
 def main():
     try:
@@ -37,11 +47,30 @@ def main():
         com1.enable()
         #Se chegamos até aqui, a comunicação foi aberta com sucesso. Faça um print para informar.
         print("Abriu a comunicação")
-        
+        print("esperando 1 byte de sacrifício")
+
+        rxBuffer, nRx = com1.getData(1)
+        com1.rx.clearBuffer()
+        time.sleep(.1)
+
+
+        mensagem = b''
+        mensagens = []
+
         #acesso aos bytes recebidos
-        txLen = len(txBuffer)
-        rxBuffer, nRx = com1.getData(txLen)
-        print("recebeu {} bytes" .format(len(rxBuffer)))
+        while True:
+            rxBuffer, nRx = com1.getData(1)
+            print("recebeu {} bytes" .format(len(rxBuffer)))
+            mensagem += rxBuffer
+            print(mensagem)
+
+            if com1.rx.getBufferLen() == 0:
+                mensagens.append(split_message(mensagem))
+                break
+        
+        print('a'*50)
+        print(mensagens)
+        print(len(mensagens[0]))
         
         #for i in range(len(rxBuffer)):
             #print("recebeu {}" .format(rxBuffer[i]))

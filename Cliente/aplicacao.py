@@ -63,9 +63,6 @@ def main():
     try:
         print("Iniciou o main")
         
-        comandos = sorteia_comandos()
-        mensagem = constroi_mensagem(comandos)
-        print(mensagem)
         #declaramos um objeto do tipo enlace com o nome "com". Essa é a camada inferior à aplicação. Observe que um parametro
         #para declarar esse objeto é o nome da porta.
         com1 = enlace(serialName)
@@ -81,7 +78,9 @@ def main():
         #seus dados a serem transmitidos são um array bytes a serem transmitidos. Gere esta lista com o 
         #nome de txBuffer. Esla sempre irá armazenar os dados a serem enviados.
         
-        txBuffer = open(imageR, 'rb').read()
+        print("Sorteando comandos e construíndo mensagens")
+        comandos = sorteia_comandos()
+        txBuffer = constroi_mensagem(comandos)
         #txBuffer = b'\x12\x13\xAA'  #isso é um array de bytes
        
         print("meu array de bytes tem tamanho {}" .format(len(txBuffer)))
@@ -113,19 +112,14 @@ def main():
       
         #acesso aos bytes recebidos
         txLen = len(txBuffer)
-        rxBuffer, nRx = com1.getData(txLen)
+        rxBuffer, nRx = com1.getData(10)
         print("recebeu {} bytes" .format(len(rxBuffer)))
         
         #for i in range(len(rxBuffer)):
             #print("recebeu {}" .format(rxBuffer[i]))
         
-        print("Salvando dados no arquivo: ")
-        print(" - {}".format(imageW))
-        f = open(imageW, 'wb')
-        f.write(rxBuffer)
-        
+        print(rxBuffer)
         #fecha arquivo de imagem
-        f.close()
 
             
     

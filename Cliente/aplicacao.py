@@ -61,15 +61,18 @@ serialName = "COM7"                  # Windows(variacao de)
 
 def main():
     try:
+        
         print("Iniciou o main")
         
         #declaramos um objeto do tipo enlace com o nome "com". Essa é a camada inferior à aplicação. Observe que um parametro
         #para declarar esse objeto é o nome da porta.
         com1 = enlace(serialName)
-        
+        com1.enable()
+        time.sleep(.2)
+        com1.sendData(b'00')
+        time.sleep(1)
     
         # Ativa comunicacao. Inicia os threads e a comunicação seiral 
-        com1.enable()
         #Se chegamos até aqui, a comunicação foi aberta com sucesso. Faça um print para informar.
         print("Abriu a comunicação")
 
@@ -80,7 +83,10 @@ def main():
         
         print("Sorteando comandos e construíndo mensagens")
         comandos = sorteia_comandos()
+        print(f"Serão enviados {len(comandos)} comandos")
+        print(comandos)
         txBuffer = constroi_mensagem(comandos)
+        print(txBuffer)
         #txBuffer = b'\x12\x13\xAA'  #isso é um array de bytes
        
         print("meu array de bytes tem tamanho {}" .format(len(txBuffer)))
@@ -111,14 +117,14 @@ def main():
         #Veja o que faz a funcao do enlaceRX  getBufferLen
       
         #acesso aos bytes recebidos
-        txLen = len(txBuffer)
-        rxBuffer, nRx = com1.getData(10)
-        print("recebeu {} bytes" .format(len(rxBuffer)))
+        #txLen = len(txBuffer)
+        #rxBuffer, nRx = com1.getData(10)
+        #print("recebeu {} bytes" .format(len(rxBuffer)))
         
         #for i in range(len(rxBuffer)):
             #print("recebeu {}" .format(rxBuffer[i]))
         
-        print(rxBuffer)
+        #print(rxBuffer)
         #fecha arquivo de imagem
 
             

@@ -32,8 +32,8 @@ def split_message(message):
         m.remove(b'')
     return m
 
-def get_first(message):
-    return message[0]
+# def get_first(message):
+#     return message[0]
 
 def main():
     try:
@@ -55,31 +55,38 @@ def main():
 
 
         mensagem = b''
-        mensagens = []
 
         #acesso aos bytes recebidos
         while True:
             rxBuffer, nRx = com1.getData(1)
-            print("recebeu {} bytes" .format(len(rxBuffer)))
+            print("tenho {} bytes" .format(com1.rx.getBufferLen()))
             mensagem += rxBuffer
             print(mensagem)
 
             if com1.rx.getBufferLen() == 0:
-                mensagens.append(split_message(mensagem))
+                mensagens = split_message(mensagem)
                 break
         
         print('a'*50)
+        mensagens = mensagens
         print(mensagens)
-        print(len(mensagens[0]))
+        
+        num_comandos = len(mensagens)
+
+        total_bytes = 0
+        for mensagem in mensagens:
+            print(f"Recebi a mensagem {mensagem}")
+            total_bytes += len(mensagem)
+
+        print(f"Recebi {num_comandos} comandos, totalizando {total_bytes} bytes!")
         
         #for i in range(len(rxBuffer)):
             #print("recebeu {}" .format(rxBuffer[i]))
         
-        print(rxBuffer)
+        confirmacao = bytearray([num_comandos])
+        #confirmacao = bytearray([9])
+        com1.sendData(confirmacao)
 
-
-            
-    
         # Encerra comunicação
         print("-------------------------")
         print("Comunicação encerrada")

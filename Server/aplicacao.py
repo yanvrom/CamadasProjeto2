@@ -26,7 +26,6 @@ serialName = "COM5"                  # Windows(variacao de)
 
 def split_message(message):
     message = bytearray(message)
-    message.pop(0)
     m = message.split(b'\xfb')
     while b'' in m:
         m.remove(b'')
@@ -58,14 +57,15 @@ def main():
 
         #acesso aos bytes recebidos
         while True:
-            rxBuffer, nRx = com1.getData(1)
-            print("tenho {} bytes" .format(com1.rx.getBufferLen()))
-            mensagem += rxBuffer
-            print(mensagem)
+            if com1.rx.getBufferLen() > 0:
+                rxBuffer, nRx = com1.getData(com1.rx.getBufferLen())
+                print("tenho {} bytes" .format(com1.rx.getBufferLen()))
+                mensagem += rxBuffer
+                print(mensagem)
 
-            if com1.rx.getBufferLen() == 0:
-                mensagens = split_message(mensagem)
-                break
+                if com1.rx.getBufferLen() == 0:
+                    mensagens = split_message(mensagem)
+                    break
         
         print('a'*50)
         mensagens = mensagens
